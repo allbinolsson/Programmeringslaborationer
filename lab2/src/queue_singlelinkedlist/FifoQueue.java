@@ -21,12 +21,13 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 	public boolean offer(E e) {
 		QueueNode<E> node = new QueueNode<E>(e);
 		
-		if (last == null) {
+		if (size == 0) {
 			node.next = node;	// Om listan är tom sätts noden in och får sig 
 			last = node;		// som nästa nod
 		} else {
 			node.next = last.next; 	// Annars får noden den före detta sista nodens nästa
 			last.next = node;		// och dess next uppdateras till den insatta noden
+			last = node;			// Slutligen sätts node som sista elementet i listan.
 		}
 		
 		if (last.equals(node)) {
@@ -89,7 +90,6 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 	 * @return an iterator over the elements in this queue
 	 */	
 	public Iterator<E> iterator() {
-		
 		return new QueueIterator();
 	}
 	
@@ -97,41 +97,63 @@ public class FifoQueue<E> extends AbstractQueue<E> implements Queue<E> {
 	 * Appends the specified queue to this queue
 	 * post: all elements from the specified queue are appended
 	 * to this queue. The specified queue (q) is empty after the call.
-	 * @param
+	 * @param q the queue to append
+	 * @throws IllegalArgumentException if this queue and q are identical
 	 */
+	public void append(FifoQueue<E> q) {
+		
+		if (q.equals(this)) {
+			throw new IllegalArgumentException();
+		}
+		
+		if (q.size == 0) {
+			return;
+		} else if (size == 0) {
+			size += q.size;	// Flyttar över alla objekt
+			last = q.last;	// Referensen till sista objeket ger samtliga andra objekt
+			
+			q.last = null;	// Tar bort elementen från q (den blir tom) 
+			q.size = 0;
+		} else {
+			QueueNode<E> tempHead = last.next;
+			
+			size += q.size;	// Slår samman storlekarna
+			last.next = q.last.next;	// Referens till första objektet i kön 
+			last = q.last;	// Sätter last til sista objektet i q
+			last.next = tempHead; 	// Sätter sista elementets next till första elementet
+			
+			q.last = null;
+			q.size = 0;
+		}
+	}
+	
 	
 	private class QueueIterator implements Iterator<E> {
 		private QueueNode<E> pos;
-		private int counter;
+		private int counter;	// Värde som räknar genom kön.
 		
 		private QueueIterator () {
 			
 			if (size == 0) {
 				pos = null;
 			} else {
-				pos = last.next; 	// Första elementet i listan
+				pos = last; 	// Sista elementet i listan
 			}
 			
-			counter = 1; 			// Startvärde, 1 för första elementet i kön
+			counter = 0; 		// Startvärde, 1 för första elementet i kön
 		}
 		
 		public boolean hasNext() {
-			
-			if (size == 0 || counter >= size) {	// Om kön är tom
-				return false;
-			} else {
-				return !last.equals(pos);	// Kollar om pos är sist i kön
-			}
+			return !(size == 0 || counter >= size); 	// False om kön är tom eller om pos är sist i kön
 		}
 
 		public E next() {
-			if (size == 0 || counter >= size) {
+			if (!hasNext()) {
 				throw new NoSuchElementException();
 			} else {
-				QueueNode<E> posNext = pos.next;	// Sparar referens till nästa element 
-				pos = pos.next;		// Pos blir sitt nästa element
-				counter++;			// Ökar räknaren
-				return posNext.element;
+				counter++;		// Ökar räknaren för att hänvisa till nästa element
+				pos = pos.next; 	// Ändrar referensen till pos till nästa element
+				return pos.element;
 			}
 		}
 	}
