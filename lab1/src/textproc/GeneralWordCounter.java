@@ -27,13 +27,11 @@ public class GeneralWordCounter implements TextProcessor{
 		}
 	}
 	
-	public void report() {
-//		for(String key: wordMap.keySet()) {
-//			if (wordMap.get(key) >= 200) {
-//				System.out.println(key + ": " + wordMap.get(key));
-//			}
-//		}
-		
+	public Set<Map.Entry<String, Integer>> getWords () {	// Tillagd i laboration 3.
+		return wordMap.entrySet();
+	}
+	
+	public void report() {		
 		Set<Map.Entry<String, Integer>> wordSet = wordMap.entrySet();
 		List<Map.Entry<String, Integer>> wordList = new ArrayList<>(wordSet);
 		wordList.sort(new WordCountComparator());

@@ -33,6 +33,7 @@ public class TestAppendFifoQueue {
 	public final void testTwoEmpty() {
 		q1.append(q2);
 		assertTrue("Fel storlek efter sammanslagning", q1.isEmpty());
+		assertTrue(q2.isEmpty());
 		// Finns inga att objekt att kontrollera ordning på
 	}
 
@@ -44,9 +45,9 @@ public class TestAppendFifoQueue {
 		}
 		
 		int joinedSize = q1.size() + q2.size();	// Den sammanlagda storleken
-		assertTrue("Listan har fel storlek", q1.size() == joinedSize);	// Kollar om storleken stämmer
 		
 		q1.append(q2);	// q2 är tom
+		assertTrue("Listan har fel storlek", q1.size() == joinedSize);	// Kollar om storleken stämmer
 		
 		for (int i = 0; i < 5; i++) {
 			int k = q1.poll();
