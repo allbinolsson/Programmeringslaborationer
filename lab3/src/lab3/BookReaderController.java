@@ -12,9 +12,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.shape.Box;
 import javafx.stage.Stage;
 
@@ -30,19 +32,19 @@ public class BookReaderController extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		// Skapar knappar och l√§gger till l√§ngst ner i f√∂nstret
+		// Skapar knappar och l‰gger till l‰ngst ner i fˆnstret
 		HBox hbox = new HBox();
 		Button alphaButton = new Button("Alphabetical");
 		Button frequencyButton = new Button("Frequency");
 		hbox.getChildren().addAll(alphaButton, frequencyButton);
 		root.setBottom(hbox);
 
-		// Skapar och l√§gger till ett textf√§lt med s√∂kknapp
+		// Skapar och l‰gger till ett textf‰lt med sˆkknapp
 		Button searchButton = new Button("Search");
 		TextField text = new TextField();
 		hbox.getChildren().addAll(text, searchButton);
 
-		// L√§ser in och skriver ut orden i f√∂nstret
+		// L‰ser in och skriver ut orden i f√∂nstret
 		Set<String> exceptions = new HashSet<String>();
 		Scanner eScan = new Scanner(new File("undantagsord.txt"));
 		Scanner s = new Scanner(new File("nilsholg.txt"));
@@ -66,7 +68,7 @@ public class BookReaderController extends Application {
 
 		root.setCenter(listView);
 
-		// S√§ger vad som ska h√§nda vid knapptryck
+		// S‰ger vad som ska h‰nda vid knapptryck
 		alphaButton.setOnAction(event -> {
 			words.sort((e1, e2) -> e1.getKey().compareTo(e2.getKey()));
 			System.out.println("Alphabetical");
@@ -76,17 +78,23 @@ public class BookReaderController extends Application {
 			words.sort((e1, e2) -> e1.getValue().compareTo(e2.getValue()));
 			System.out.println("Frequency");
 		});
+		
+		// ƒndrar sˆkf‰ltets storlek
+		hbox.setHgrow(text, Priority.ALWAYS);
 
-		// S√∂kfunktion
-		searchButton.setDefaultButton(true);	// Till√•ter mig att s√∂ka med enter
+		// Sˆkfunktion
+		searchButton.setDefaultButton(true);	// TillÂter mig att sˆka med enter
 		searchButton.setOnAction(event -> {
-			int index = 0;
+			SelectionModel sModel = listView.getSelectionModel();
 			for (int i = 0; i < words.size(); i++) {
-				if (text.getText().equals(words.get(i).getKey())) {
+				if (text.getText().equalsIgnoreCase(words.get(i).getKey())) {
 					listView.scrollTo(i);
+					sModel.select(i);	// Markerar det sˆkta ordet
 				}
 			}
+			
 			System.out.println("Searching for: " + text.getText());
+			text.clear(); // Removes the text to allow a new search
 		});
 	}
 
