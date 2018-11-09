@@ -45,12 +45,12 @@ public class FractalApplication extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		Point a = new Point(100, 400);	// Points to use in mountain
-		Point b = new Point(200, 300);	// Points to use in mountain
-		Point c = new Point(300, 350);	// Points to use in mountain
+		Point a = new Point(100, 450);	// Points to use in mountain
+		Point b = new Point(250, 100);	// Points to use in mountain
+		Point c = new Point(500, 500);	// Points to use in mountain
 		fractals = new Fractal[2];
-		fractals[0] = new Koch(300);
-		fractals[1] = new Mountain(a, b, c);
+		fractals[1] = new Koch(300);
+		fractals[0] = new Mountain(a, b, c);
 		actFractal = fractals[0];
 		BorderPane root = new BorderPane();
 		root.setBottom(addButtonBox());
