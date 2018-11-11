@@ -50,7 +50,7 @@ public class FractalApplication extends Application {
 		Point c = new Point(500, 500);	// Points to use in mountain
 		fractals = new Fractal[2];
 		fractals[1] = new Koch(300);
-		fractals[0] = new Mountain(a, b, c);
+		fractals[0] = new Mountain(50, a, b, c);
 		actFractal = fractals[0];
 		BorderPane root = new BorderPane();
 		root.setBottom(addButtonBox());
