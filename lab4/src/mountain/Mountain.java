@@ -1,6 +1,8 @@
 package mountain;
 
 import fractal.*;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Mountain extends Fractal {
 	
@@ -8,6 +10,7 @@ public class Mountain extends Fractal {
 	private Point p1;
 	private Point p2;
 	private Point p3;
+	private Map<Side, Point> map = new HashMap<>();
 	
 	public Mountain (double startDev, Point p1, Point p2, Point p3) {
 		super();
@@ -23,6 +26,7 @@ public class Mountain extends Fractal {
 	
 	public void draw (TurtleGraphics g) {
 		// g.moveTo(p1.getX(), p1.getY());
+		
 		fractalTriangle (g, order, p1, p2, p3, startDev);
 	}
 	
@@ -50,9 +54,22 @@ public class Mountain extends Fractal {
 	}
 	
 	private Point newPoint (Point a, Point b, double dev) {
-		int x = a.getX() + ((b.getX()- a.getX()) / 2);
-//		int y = a.getY() + ((b.getY() - a.getY()) / 2);
-		int y = a.getY() + ((b.getY() - a.getY()) / 2) + (int)RandomUtilities.randFunc(dev);
-		return new Point(x, y);
+		Side side = new Side (a, b);
+		
+		if (map.containsKey(side)) {
+			Point p = map.get(side);	// Skapar en punkt p som skall returnas.
+			map.remove(side);			// Tar bort sidan från listan då den inte skall användas igen
+			return p;
+		} else {
+			int x = a.getX() + ((b.getX()- a.getX()) / 2);
+			
+//			int y = a.getY() + ((b.getY() - a.getY()) / 2);
+			int y = a.getY() + ((b.getY() - a.getY()) / 2) + (int)RandomUtilities.randFunc(dev);
+			
+			Point p = new Point(x, y);
+			map.put(new Side(a, b), p);
+			
+			return p;
+		}
 	}
 }
