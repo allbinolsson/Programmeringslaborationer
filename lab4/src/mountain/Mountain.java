@@ -23,10 +23,10 @@ public class Mountain extends Fractal {
 	
 	public void draw (TurtleGraphics g) {
 		// g.moveTo(p1.getX(), p1.getY());
-		fractalTriangle (g, order, p1, p2, p3);
+		fractalTriangle (g, order, p1, p2, p3, startDev);
 	}
 	
-	private void fractalTriangle (TurtleGraphics g, int order, Point a, Point b, Point c) {
+	private void fractalTriangle (TurtleGraphics g, int order, Point a, Point b, Point c, double dev) {
 		if (order == 0) {
 			g.moveTo(a.getX(), a.getY());
 			g.forwardTo(b.getX(), b.getY());
@@ -38,10 +38,14 @@ public class Mountain extends Fractal {
 //			fractalTriangle(g, order - 1, newPoint(a, c), newPoint(b, c), c);
 //			fractalTriangle(g, order - 1, newPoint(a, b), newPoint(b, c), newPoint(a, c));
 			
-			fractalTriangle(g, order - 1, a, newPoint(a, b, startDev / 2), newPoint(a, c, startDev / 2));
-			fractalTriangle(g, order - 1, newPoint(a, b, startDev / 2), b, newPoint(b, c, startDev / 2));
-			fractalTriangle(g, order - 1, newPoint(a, c, startDev / 2), newPoint(b, c, startDev / 2), c);
-			fractalTriangle(g, order - 1, newPoint(a, b, startDev / 2), newPoint(b, c, startDev / 2), newPoint(a, c, startDev / 2));
+			Point new1 = newPoint(a, b, dev);
+			Point new2 = newPoint (a, c, dev);
+			Point new3 = newPoint (b, c, dev);
+			
+			fractalTriangle(g, order - 1, a, new1, new2, dev / 2);
+			fractalTriangle(g, order - 1, new1, b, new3, dev / 2);
+			fractalTriangle(g, order - 1, new2, c, new3, dev / 2);
+			fractalTriangle(g, order - 1, new1, new3, new2, dev / 2);
 		}
 	}
 	
