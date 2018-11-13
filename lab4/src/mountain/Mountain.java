@@ -53,12 +53,11 @@ public class Mountain extends Fractal {
 		}
 	}
 	
-	private Point newPoint (Point a, Point b, double dev) {
+	private Point newPoint (Point a, Point b, double dev) {		
 		Side side = new Side (a, b);
-		
 		if (map.containsKey(side)) {
-			Point p = map.get(side);	// Skapar en punkt p som skall returnas.
-			map.remove(side);			// Tar bort sidan från listan då den inte skall användas igen
+			Point p = map.get(side);	// Saves the point to return
+			map.remove(side);			// Removes the side from the map
 			return p;
 		} else {
 			int x = a.getX() + ((b.getX()- a.getX()) / 2);
