@@ -8,7 +8,7 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * Constructs an empty binary searchtree.
 	 */
 	public BinarySearchTree() {
-		
+		root = null;
 	}
 
 	/**
@@ -25,6 +25,10 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * @return the height of the tree
 	 */
 	public int height() {
+		return height(root);
+	}
+	
+	private int height (BinaryNode<E> node) {
 		return 0;
 	}
 	
@@ -33,21 +37,21 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * @return the number of elements in this tree
 	 */
 	public int size() {
-		return 0;
+		return size;
 	}
 	
 	/**
 	 * Print tree contents in inorder.
 	 */
 	public void printTree() {
-
+		
 	}
 
 	/** 
 	 * Builds a complete tree from the elements in the tree.
 	 */
 	public void rebuild() {
-
+		
 	}
 	
 	/*
