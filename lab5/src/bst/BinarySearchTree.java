@@ -17,8 +17,31 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * @return true if the the element was inserted
 	 */
 	public boolean add(E x) {
-		
-		return false;
+		return add(x, root);
+	}
+	
+	private boolean add(E x, BinaryNode<E> root) {
+		if (root == null) {
+			root = new BinaryNode<E>(x);
+			size++;
+			return true;
+		} else if (x.compareTo(root.element) < 0) {
+			if (root.left == null) {
+				root.left = new BinaryNode<E>(x);
+				size++;
+				return true;
+			} else {
+				return add(x, root.left);
+			}
+		} else {
+			if (root.right == null) {
+				root.right = new BinaryNode<E>(x);
+				size++;
+				return true;
+			} else {
+				return add(x, root.right);
+			}
+		}
 	}
 	
 	/**
@@ -50,6 +73,14 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 */
 	public void printTree() {
 		
+	}
+	
+	private void printTree (BinaryNode<E> n) {
+		if (n.left == null) {
+			System.out.println(n);
+		} else {
+			printTree(n.left);
+		}
 	}
 
 	/** 
