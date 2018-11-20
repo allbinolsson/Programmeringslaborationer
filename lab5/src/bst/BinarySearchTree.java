@@ -2,7 +2,7 @@ package bst;
 
 public class BinarySearchTree<E extends Comparable<? super E>> {
 	BinaryNode<E> root;
-    int size;
+    private int size;
     
 	/**
 	 * Constructs an empty binary searchtree.
@@ -72,14 +72,16 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * Print tree contents in inorder.
 	 */
 	public void printTree() {
-		
+		printTree(root);
 	}
 	
 	private void printTree (BinaryNode<E> n) {
-		if (n.left == null) {
-			System.out.println(n);
+		if (n == null) {
+			return;
 		} else {
 			printTree(n.left);
+			System.out.println(n.element);
+			printTree(n.right);
 		}
 	}
 
