@@ -4,6 +4,27 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	BinaryNode<E> root;
     private int size;
     
+    public static void main (String[] args) {
+    	BSTVisualizer v = new BSTVisualizer("Visualizer", 700, 500);
+    	BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+    	
+//    	bst.add(1);
+//    	bst.add(2);
+//    	bst.add(3);
+//    	bst.add(4);
+//    	bst.add(5);
+    	
+    	bst.add(5);
+    	bst.add(3);
+    	bst.add(7);
+    	bst.add(2);
+    	bst.add(4);
+    	bst.add(6);
+    	bst.add(8);
+    	
+    	v.drawTree(bst);
+    }
+    
 	/**
 	 * Constructs an empty binary searchtree.
 	 */
@@ -20,26 +41,30 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 		return add(x, root);
 	}
 	
-	private boolean add(E x, BinaryNode<E> root) {
+	private boolean add(E x, BinaryNode<E> node) {
 		if (root == null) {
-			root = new BinaryNode<E>(x);
+			root = new BinaryNode<>(x);
 			size++;
 			return true;
-		} else if (x.compareTo(root.element) < 0) {
-			if (root.left == null) {
-				root.left = new BinaryNode<E>(x);
-				size++;
-				return true;
-			} else {
-				return add(x, root.left);
-			}
 		} else {
-			if (root.right == null) {
-				root.right = new BinaryNode<E>(x);
-				size++;
-				return true;
+			if (x.compareTo(node.element) == 0) {
+				return false;
+			} else if (x.compareTo(node.element) < 0) {
+				if (node.left == null) {
+					node.left = new BinaryNode<>(x);
+					size++;
+					return true;
+				} else {
+					return add(x, node.left);
+				}
 			} else {
-				return add(x, root.right);
+				if (node.right == null) {
+					node.right = new BinaryNode<>(x);
+					size++;
+					return true;
+				} else {
+					return add(x, node.right);
+				}
 			}
 		}
 	}
