@@ -119,9 +119,16 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 */
 	public void rebuild() {
 		E[] a = (E[]) new Comparable[size()];
+		int last = a.length - 1;
 		
 		toArray(root, a, 0);
-		buildTree(a, 0, size() - 1);
+		
+		for (int i = 0; i < a.length; i++) {
+			System.out.println(a[i]);
+		}
+		
+		root = buildTree(a, 0, last);
+		// buildTree(a, 0, size() - 1);
 	}
 	
 	/*
@@ -130,16 +137,14 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * Returns the index of the last inserted element + 1 (the first empty
 	 * position in a).
 	 */
-	private int toArray(BinaryNode<E> n, E[] a, int index) {
-		if (n.left == null) {
-			if (n.right == null) {
-				a[index] = n.element;
-				return index + 1;
-			} else {
-				return toArray(n.right, a, index + 1);
-			}
+	private int toArray(BinaryNode<E> node, E[] a, int index) {
+		if (node == null) {
+			return index;
 		} else {
-			return toArray(n.left, a, index + 1);
+			index = toArray(node.left, a, index);
+			a[index++] = node.element;
+			index = toArray(node.right, a, index);
+			return index;
 		}
 	}
 	
@@ -153,7 +158,7 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 		if (first > last) {
 			return null;
 		} else {
-			int rootIndex = (int)Math.floor((first + last) / 2);
+			int rootIndex = (int)(first + last) / 2;
 			BinaryNode<E> node = new BinaryNode<>(a[rootIndex]);
 			
 			node.left = buildTree(a, first, rootIndex - 1);
