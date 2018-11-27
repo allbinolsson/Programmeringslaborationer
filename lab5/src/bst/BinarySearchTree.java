@@ -115,6 +115,7 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 */
 	public void rebuild() {
 		E[] a = (E[]) new Comparable[size()];
+		buildTree(a, 0, a.length - 1);
 	}
 	
 	/*
@@ -124,7 +125,16 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * position in a).
 	 */
 	private int toArray(BinaryNode<E> n, E[] a, int index) {
-		return 0;
+		if (n.left == null) {
+			if (n.right == null) {
+				a[index] = n.element;
+				return index + 1;
+			} else {
+				return toArray(n.right, a, index + 1);
+			}
+		} else {
+			return toArray(n.left, a, index + 1);
+		}
 	}
 	
 	/*
