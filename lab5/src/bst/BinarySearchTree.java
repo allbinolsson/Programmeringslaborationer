@@ -8,20 +8,24 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
     	BSTVisualizer v = new BSTVisualizer("Visualizer", 700, 500);
     	BinarySearchTree<Integer> bst = new BinarySearchTree<>();
     	
-//    	bst.add(1);
-//    	bst.add(2);
-//    	bst.add(3);
-//    	bst.add(4);
-//    	bst.add(5);
-    	
-    	bst.add(5);
-    	bst.add(3);
-    	bst.add(7);
+    	bst.add(1);
     	bst.add(2);
+    	bst.add(3);
     	bst.add(4);
-    	bst.add(6);
-    	bst.add(8);
+    	bst.add(5);
     	
+//    	bst.add(5);
+//    	bst.add(3);
+//    	bst.add(7);
+//    	bst.add(2);
+//    	bst.add(4);
+//    	bst.add(6);
+//    	bst.add(8);
+    	
+//    	v.drawTree(bst);
+//    	bst.printTree();
+    	
+    	bst.rebuild();
     	v.drawTree(bst);
     }
     
@@ -115,7 +119,9 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 */
 	public void rebuild() {
 		E[] a = (E[]) new Comparable[size()];
-		buildTree(a, 0, a.length - 1);
+		
+		toArray(root, a, 0);
+		buildTree(a, 0, size() - 1);
 	}
 	
 	/*
@@ -143,7 +149,18 @@ public class BinarySearchTree<E extends Comparable<? super E>> {
 	 * Returns the root of tree.
 	 */
 	private BinaryNode<E> buildTree(E[] a, int first, int last) {
-		return null;
+				
+		if (first > last) {
+			return null;
+		} else {
+			int rootIndex = (int)Math.floor((first + last) / 2);
+			BinaryNode<E> node = new BinaryNode<>(a[rootIndex]);
+			
+			node.left = buildTree(a, first, rootIndex - 1);
+			node.right = buildTree(a, rootIndex + 1, last);
+			
+			return node;
+		}
 	}
 	
 
