@@ -54,9 +54,17 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 		return size;
 	}
 	
+	private int index (K key) {
+		return 0;
+	}
+	
+	private Entry<K, V> find (int index, K key) {
+		return null;
+	}
+	
 	public static class Entry<K, V> implements Map.Entry<K, V>{
-		K key;
-		V value;
+		private K key;
+		private V value;
 		
 		public Entry (K key, V value) {
 			this.key = key;
