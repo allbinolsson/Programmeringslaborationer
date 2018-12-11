@@ -10,11 +10,13 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 	public SimpleHashMap() {
 		entries = (Entry<K, V>[]) new Entry[16];
 		capacity = 16;
+		size = 0;
 	}
 
 	public SimpleHashMap(int capacity) {
 		entries = (Entry<K, V>[]) new Entry[capacity];
 		this.capacity = capacity;
+		size = 0;
 	}
 
 	public String show() {
@@ -58,26 +60,36 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 
 	@Override
 	public V put(K key, V value) {
-		int index = index(key);
-		Entry<K, V> entry = find(index, key);
-
-		rehash(); // This won't do anything unless it's needed.
-
-		if (entry == null) {
-			entries[index] = new Entry<>(key, value);
-			size++;
-			return null;
-		} else {
-			V previousValue = entry.getValue();
-			entries[index] = new Entry<>(key, value);
-			size++;
-			return previousValue;
-		}
+		int index= index(key);
+		Entry<K, V> put = new Entry<>(key, value);
+        Entry<K, V> found = find(index, key);
+        
+        rehash();
+        
+        if (found != null) {
+        	return found.setValue(value);
+        } else {
+        	Entry<K, V> head = entries[index];
+        	if (head == null) {
+        		entries[index] = put;
+        		size++;
+        		return null;
+        	} else {
+        		while (head.next != null) {
+        			head = head.next;
+        		}
+        		size++;
+        		head.next = put;
+        		return null;
+        	}
+        }
 	}
 
 	private void rehash() {
-		while (size() / capacity > LOAD_FACTOR) {
-			capacity++;
+		if (size / capacity > LOAD_FACTOR) {
+			capacity *= 2;
+			Entry<K, V>[] old = entries;
+			entries = (Entry<K, V>[]) new Entry[capacity];
 		}
 	}
 
@@ -97,25 +109,17 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 	}
 
 	private Entry<K, V> find(int index, K key) {
-		Entry<K, V> entry = entries[index];
-
-		while (true) {
-			if (entry != null) {
-				if (entry.getKey().equals(key)) {
-					return entry;
-				} else if (entry.next != null) {
-					entry = entry.next;
-					if (entry.getKey().equals(key)) {
-						return entry;
-					}
-				} else {
-					break;
-				}
-			} else {
-				break;
+		Entry<K, V> head = entries[index];	// First element of list at index
+		
+		while (head != null) {	// If head is not null
+			if (head.key.equals(key)) {	// If keys are equal
+				return head;
 			}
+			
+			head = head.next;	// Move forward in list
 		}
-		return null;
+		
+		return null;	// If no Entry was found
 	}
 
 	public static class Entry<K, V> implements Map.Entry<K, V> {
@@ -140,8 +144,9 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 
 		@Override
 		public V setValue(V value) {
+			V prevVal = this.value;
 			this.value = value;
-			return this.value;
+			return prevVal;
 		}
 
 		@Override
