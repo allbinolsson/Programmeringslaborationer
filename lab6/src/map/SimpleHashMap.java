@@ -1,5 +1,7 @@
 package map;
 
+import java.util.Random;
+
 public class SimpleHashMap<K, V> implements Map<K, V> {
 
 	private final double LOAD_FACTOR = 0.75;
@@ -7,6 +9,25 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 	private int size;
 	private int capacity;
 
+	public static void main (String[] args) {
+		SimpleHashMap<Integer, Integer> s = new SimpleHashMap<>(10);
+		String show;
+		Random r = new Random();
+//		s.put(1, 1);
+//		s.put(2, 2);
+//		s.put(5, 5);
+//		s.put(-1, -1);
+//		s.put(-5, -5);
+		
+		for (int i = 0; i < 50; i++) {
+			int rand = r.nextInt(1001) - 2000;
+			s.put(rand, rand);
+		}
+		
+		show = s.show();
+		System.out.println(show);
+	}
+	
 	public SimpleHashMap() {
 		entries = (Entry<K, V>[]) new Entry[16];
 		capacity = 16;
@@ -26,9 +47,11 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 		for (int i = 0; i < entries.length; i++) {
 			entry = entries[i];
 
+			string += i + "\t";
+			
 			if (entry != null) {
 				while (true) {
-					string += entry.toString();
+					string += entry.toString() + "\t";
 
 					if (entry.next != null) {
 						entry = entry.next;
@@ -37,6 +60,8 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 					}
 				}
 			}
+			
+			string += "\n";
 		}
 
 		return string;
@@ -88,15 +113,55 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 	private void rehash() {
 		if (size / capacity > LOAD_FACTOR) {
 			capacity *= 2;
+			size = 0;
 			Entry<K, V>[] old = entries;
 			entries = (Entry<K, V>[]) new Entry[capacity];
+			
+			Entry<K, V> temp;
+			
+			for (int i = 0; i < old.length; i++) {
+				
+				if (old[i] != null) {
+					temp = old[i];
+					
+					while (temp != null) {
+						put(temp.getKey(), temp.getValue());
+						temp = temp.next;
+					}
+				}
+			}
 		}
 	}
 
 	@Override
 	public V remove(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		K key = (K) arg0;
+		int index = index(key);
+		Entry<K, V> found = find(index, key);
+		
+		if (entries[index] == null) {
+			return null;
+		} else if (key.equals(entries[index].getKey())) {
+			entries[index] = found.next;
+			size--;
+			return found.getValue();
+		} else {
+			Entry<K, V> previous = null;
+			Entry<K, V> current = entries[index];
+			while (current != null) {
+				if (current.getKey().equals(key)) {
+					previous.next = current.next;
+					size--;
+					return current.getValue();
+				}
+				
+				previous = current;
+				current = current.next;
+			}
+			
+			return null;
+		}
 	}
 
 	@Override
@@ -112,7 +177,7 @@ public class SimpleHashMap<K, V> implements Map<K, V> {
 		Entry<K, V> head = entries[index];	// First element of list at index
 		
 		while (head != null) {	// If head is not null
-			if (head.key.equals(key)) {	// If keys are equal
+			if (head.getKey().equals(key)) {	// If keys are equal
 				return head;
 			}
 			
